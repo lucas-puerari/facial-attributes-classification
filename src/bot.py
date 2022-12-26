@@ -12,7 +12,8 @@ from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
 
-from utils import preprocessing, normalization, plot_dataset_image
+from utils.pipeline import preprocessing, normalization
+from utils.plotter import plot_dataset_image
 
 
 # Define a few command handlers. These usually take the two arguments update and

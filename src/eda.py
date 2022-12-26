@@ -4,7 +4,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 
-from utils import plot_labels_distribution
+from utils.pipeline import plot_labels_distribution
 
 
 ROOT_DIR = os.getcwd()

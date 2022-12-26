@@ -1,4 +1,3 @@
-import os
 import PIL
 import json
 import numpy as np
@@ -6,42 +5,6 @@ import seaborn as sns
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
-
-
-def preparing(image_filepath, labels_filepath):
-    filepath = image_filepath.decode('utf-8')
-    filename = os.path.basename(filepath)
-
-    image = PIL.Image.open(filepath)
-    image = image.convert('RGB')
-    image = np.asarray(image).astype('float32')
-
-    with open(labels_filepath.decode('utf-8')) as f:
-        labels_file = json.load(f)
-
-    labels = list(labels_file[filename].values())
-    labels = np.asarray(labels).astype('float32')
-
-    return image, labels
-
-
-def preprocessing(image, image_size, labels):
-    image = tf.image.resize_with_pad(image, image_size, image_size)
-    # image = tf.image.resize(image, [image_size, image_size])
-    return image, labels
-
-
-def augmentation(image, labels):
-    image = tf.image.random_flip_left_right(image)
-    # image = tf.image.random_brightness(image, 0.9)
-    # image = tf.image.random_contrast(image, 0.9, 1)
-    # image = tf.image.random_saturation(image, 0.9, 1)
-    return image, labels
-
-
-def normalization(image, labels):
-    image = tf.math.divide(image, 255)
-    return image, labels    
 
 
 def plot_dataset_image(image, filename):

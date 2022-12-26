@@ -1,12 +1,11 @@
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import Model, layers, optimizers, losses, metrics, activations
+from keras import Model, layers, optimizers, losses, metrics, activations
 
 
 class WeightedLoss(losses.Loss):
-    def __init__(self, name, classes_num):
+    def __init__(self, name):
         super().__init__(name=name)
-        self.classes_num = classes_num
         self.loss = losses.get({
             "class_name": name,
             "config": {
@@ -19,10 +18,10 @@ class WeightedLoss(losses.Loss):
         batch_size = labels.shape[0]
         non_zeros = tf.math.count_nonzero(labels, axis=0)
 
-        zero_weight = tf.cast(non_zeros, tf.float32) / batch_size
-        one_weight = tf.cast(batch_size - non_zeros, tf.float32) / batch_size
+        zero_weight = tf.cast(batch_size - non_zeros, tf.float32) / batch_size
+        non_zeros_weight = tf.cast(non_zeros, tf.float32) / batch_size
 
-        weights =  (tf.cast(1.0, tf.float32) - labels) * zero_weight + labels * one_weight
+        weights = (tf.cast(1.0, tf.float32) - labels) * zero_weight + labels * non_zeros_weight
         weights = tf.transpose(weights)
 
         loss = self.loss(labels, prediction)
@@ -101,7 +100,13 @@ class CNN(Model):
                 "learning_rate": learning_rate
             }
         })
-        self.loss = WeightedLoss(loss, self.classes_num)
+        # self.loss = WeightedLoss(loss)
+        self.loss = losses.get({
+            "class_name": loss,
+            "config": {
+                "reduction": "none",
+            }
+        })
         self.evaluator = metrics.get(evaluator)
 
         self.training_loss_tracker = metrics.Mean()

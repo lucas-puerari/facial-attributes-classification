@@ -8,7 +8,8 @@ from tqdm import tqdm
 import tensorflow as tf
 
 from architectures.cnn import CNN
-from utils import  preparing, preprocessing, augmentation, normalization, plot_dataset_image, plot_confusion_matrix
+from utils.plotter import plot_dataset_image, plot_confusion_matrix
+from utils.pipeline import preparing, preprocessing, augmentation, normalization
 
 print('TensorFlow version:', tf.__version__)
 
